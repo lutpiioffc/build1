@@ -75,6 +75,7 @@ jobs:
           fi
           sed -i '/com\.android\.application/s/version "[0-9.]*"/version "9.1.0"/' android/settings.gradle.kts
           sed -i '/org\.jetbrains\.kotlin\.android/s/version "[0-9.]*"/version "2.2.10"/' android/settings.gradle.kts
+          printf '\nandroid.newDsl=false\nandroid.builtInKotlin=false\n' >> android/gradle.properties
           
           if [ "${{ steps.p.outputs.buildType }}" = "debug" ]; then
             flutter build apk --debug --android-skip-build-dependency-validation
