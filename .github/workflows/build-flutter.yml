@@ -25,9 +25,10 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.35.7'
           channel: stable
           cache: true
-
+          
       - name: Parse payload
         id: p
         run: |
@@ -68,22 +69,10 @@ jobs:
       - name: Build APK
         working-directory: work
         run: |
-          W=android/gradle/wrapper/gradle-wrapper.properties
-          if [ -f "$W" ]; then
-            sed -i -E 's#gradle-[0-9.]+-(all|bin)\.zip#gradle-9.3.1-bin.zip#' "$W"
-            grep distributionUrl "$W"
-          fi
-          sed -i '/com\.android\.application/s/version "[0-9.]*"/version "9.1.0"/' android/settings.gradle.kts
-          sed -i '/org\.jetbrains\.kotlin\.android/s/version "[0-9.]*"/version "2.2.10"/' android/settings.gradle.kts
-          printf '\nandroid.newDsl=false\nandroid.builtInKotlin=false\n' >> android/gradle.properties
-          sed -i 's/^android {/configure<com.android.build.api.dsl.ApplicationExtension> {/' android/app/build.gradle.kts
-          perl -0pi -e 's/\n\s*kotlinOptions\s*\{[^}]*\}//' android/app/build.gradle.kts
-          sed -n '40,75p' android/app/build.gradle.kts
-          
           if [ "${{ steps.p.outputs.buildType }}" = "debug" ]; then
-            flutter build apk --debug --android-skip-build-dependency-validation
+            flutter build apk --debug
           else
-            flutter build apk --release --android-skip-build-dependency-validation
+            flutter build apk --release
           fi
 
       - name: Siapkan output
