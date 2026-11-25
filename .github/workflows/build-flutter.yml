@@ -72,7 +72,7 @@ jobs:
           if [ "${{ steps.p.outputs.buildType }}" = "debug" ]; then
             flutter build apk --debug
           else
-            flutter build apk --release
+            flutter build apk --release --target-platform android-arm64
           fi
 
       - name: Siapkan output
